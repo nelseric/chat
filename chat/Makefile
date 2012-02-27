@@ -1,17 +1,17 @@
 CC=gcc
 DBGFLAG=-ggdb 
 CFLAGS=-std=c99 $(DBGFLAG) -Wall
-LDLIBS=
-LDFLAGS=$(DBGFLAG) -Os
+LDLIBS=-lpthread -lncurses
+LDFLAGS=$(DBGFLAG) 
 
-SOURCES=tftp.c tftpd.c
+SOURCES=chat.c
 
 OBJECTS=$(SOURCES:.c=.o)
 
-TARGET=tftpd
+TARGET=chat
 
 
-.PHONY : clean run package erase
+.PHONY : clean run erase
 
 all: $(TARGET)
 

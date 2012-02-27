@@ -4,11 +4,11 @@ CFLAGS=-std=c99 $(DBGFLAG) -Wall
 LDLIBS=
 LDFLAGS=$(DBGFLAG) -Os
 
-SOURCES=tftp.c tftpd.c
+SOURCES=dchat.c chat.c
 
 OBJECTS=$(SOURCES:.c=.o)
 
-TARGET=tftpd
+TARGET=chatd
 
 
 .PHONY : clean run package erase
