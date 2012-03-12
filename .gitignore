@@ -1,0 +1,5 @@
+*.o
+.depend
+client
+chatd
+tags

@@ -3,7 +3,7 @@
 
 typedef struct {
 	int socket;
-	char *userid;
+	char *username;
 } chat_user_t;
 
 typedef struct {
@@ -14,11 +14,11 @@ typedef struct {
 
 void cs_init(client_store_t * cstore);
 
-int add_client(client_store_t * cs, int sock, const char *userid);
+void clear_fds(client_store_t *cs, fd_set *fds);
 
-chat_user_t * get_user_by_id(client_store_t *cs, const char *userid);
+int add_client(client_store_t * cs, int sock, const char *username);
 
-void cs_iterate(void (*action)(chat_user_t *));
+chat_user_t * get_user_by_name(client_store_t *cs, const char *username);
 
 void delete_client(client_store_t *cs, int sock);
 
