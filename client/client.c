@@ -65,7 +65,33 @@ int main(int argc, char *argv[]){
     //get motd
     
     // initscr();
-
+    struct chat_buffer cbuf;
+    cbuf_init(&cbuf);
+    for(;;){
+        char buff[500];
+	struct chat_packet pktReceived;
+        size_t received  =  recv(srv_socket, buff,500, 0);
+	pktReceived = cunpack(buff, received);
+	switch(pktReceived.uint16_t){
+        case OP_CMSG:
+		{
+			char msg[500];
+			printf("%s: %s\n", pktReceived->username, pktReceived->body.cm.message );
+			break;
+		}
+	case OP_PMSG:
+		{
+			char msg[500];
+			printf("PM: %s: %s\n", pktReceived->username, pktReceived->body.pm.message );
+			break;
+		}
+	case OP_ERROR:
+		{
+			char msg[500];
+			printf("Error: %s: %s: %s", pktReceived->username, pktReceived->body.error.message);
+			break;
+		}
+				
     // printw("Hello %s", username);
     // getch();
 
@@ -95,4 +121,5 @@ void cbuf_add(struct chat_buffer *cbuf, const char *msg){
 
     pthread_mutex_unlock(&cbuf->lock);
 }
+
 
