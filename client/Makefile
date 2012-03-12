@@ -4,11 +4,11 @@ CFLAGS=-std=c99 $(DBGFLAG) -Wall
 LDLIBS=-lpthread -lncurses
 LDFLAGS=$(DBGFLAG) 
 
-SOURCES=chat.c
+SOURCES=client.c ../common/chat.c
 
 OBJECTS=$(SOURCES:.c=.o)
 
-TARGET=chat
+TARGET=client
 
 
 .PHONY : clean run erase

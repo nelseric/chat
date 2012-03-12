@@ -1,0 +1,24 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+CC	Makefile	/^CC=gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS=-std=c99 $(DBGFLAG) -Wall$/;"	m
+DBGFLAG	Makefile	/^DBGFLAG=-ggdb $/;"	m
+LDFLAGS	Makefile	/^LDFLAGS=$(DBGFLAG) -Os$/;"	m
+LDLIBS	Makefile	/^LDLIBS=$/;"	m
+OBJECTS	Makefile	/^OBJECTS=$(SOURCES:.c=.o)$/;"	m
+SOURCES	Makefile	/^SOURCES=server.c ..\/common\/chat.c$/;"	m
+TARGET	Makefile	/^TARGET=chatd$/;"	m
+_SERVER_H_	server.h	2;"	d
+chat_user_t	server.h	/^} chat_user_t;$/;"	t	typeref:struct:__anon1
+client_store_t	server.h	/^} client_store_t;$/;"	t	typeref:struct:__anon2
+clients	server.h	/^	chat_user_t * clients;$/;"	m	struct:__anon2
+diep	server.c	/^void diep(char *s){$/;"	f
+main	server.c	/^int main(int argc, char **argv){$/;"	f
+num_clients	server.h	/^	int num_clients;$/;"	m	struct:__anon2
+size	server.h	/^	int size;$/;"	m	struct:__anon2
+socket	server.h	/^	int socket;$/;"	m	struct:__anon1
+userid	server.h	/^	char *userid;$/;"	m	struct:__anon1

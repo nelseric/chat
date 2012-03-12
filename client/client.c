@@ -13,7 +13,8 @@
 #include <sys/select.h>
 #include <unistd.h>
 
-#include "chat.h"
+#include "../common/chat.h"
+#include "client.h"
 
 void usage(char *argv[]) {
     

@@ -4,7 +4,7 @@ CFLAGS=-std=c99 $(DBGFLAG) -Wall
 LDLIBS=
 LDFLAGS=$(DBGFLAG) -Os
 
-SOURCES=dchat.c chat.c
+SOURCES=server.c ../common/chat.c
 
 OBJECTS=$(SOURCES:.c=.o)
 
