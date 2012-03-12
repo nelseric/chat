@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #define CHAT_PORT 8899
+#define CHAT_PORT_S "8899"
 
 #define OP_CMSG     1 //Regular Message
 #define OP_PMSG     2 //Private Message

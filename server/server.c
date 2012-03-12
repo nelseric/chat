@@ -56,11 +56,11 @@ void cs_init(client_store_t * cstore){
 
 int add_client(client_store_t * cs, int sock, const char *userid){
     
-    if(cs->size == cs->num_hosts){
+    if(cs->size == cs->num_clients){
         cs->size = (cs->size * 3 / 2) + 5;
-        cs->clients = realloc(cs->clients, size);
+        cs->clients = realloc(cs->clients, cs->size);
     }
-    
+	return 0;
 }
 
 chat_user_t * get_user_by_id(client_store_t *cs, const char *userid){

@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <curses.h>
+#include <string.h>
 
 #include <pthread.h>
 
@@ -12,6 +13,7 @@
 #include <sys/socket.h>
 #include <sys/select.h>
 #include <unistd.h>
+#include <netdb.h>
 
 #include "../common/chat.h"
 #include "client.h"
@@ -19,23 +21,47 @@
 void usage(char *argv[]) {
     
 } 
+void diep(char *msg){
+    perror(msg);
+    exit(EXIT_FAILURE);
+}
 
 int main(int argc, char *argv[]){
     if(argc < 3 || argc > 4){
         fprintf(stderr, "Usage: %s <username> <host> (<port>)\n", argv[0]);
         exit(EXIT_FAILURE);
     }
-    //char *host = argv[2];
+    char *host = argv[2];
     char *username = argv[1];
+    char * port = CHAT_PORT_S;
+    if(argc == 4){
+        port = argv[3];
+    }
+    
+    struct addrinfo hints;
+    struct addrinfo *servinfo;  // will point to the results
+    
+    memset(&hints, 0, sizeof hints); // make sure the struct is empty
+    hints.ai_family = AF_INET;     // don't care IPv4 or IPv6
+    hints.ai_socktype = SOCK_STREAM; // TCP stream sockets
+
+    // get ready to connect
+    if(getaddrinfo(host, port, &hints, &servinfo))
+        diep("addr";
+
+    struct sockaddr_in *server_addr = (struct sockaddr_in *) servinfo->ai_addr;
+
     //set up connection
     //get motd
     
-    initscr();
+    // initscr();
 
-    printw("Hello %s", username);
-    getch();
+    // printw("Hello %s", username);
+    // getch();
 
-    endwin();
+    // endwin();
+
+    freeaddrinfo(servinfo);
 }
 
 void cbuf_init(struct chat_buffer *cbuf){

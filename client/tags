@@ -3,7 +3,7 @@
 !_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
-!_TAG_PROGRAM_VERSION	5.8	//
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 CBUF_SIZE_DEFAULT	client.h	6;"	d
 CC	Makefile	/^CC=gcc$/;"	m
 CFLAGS	Makefile	/^CFLAGS=-std=c99 $(DBGFLAG) -Wall$/;"	m
@@ -21,6 +21,7 @@ cbuf_destroy	client.c	/^void cbuf_destroy(struct chat_buffer *cbuf){$/;"	f
 cbuf_init	client.c	/^void cbuf_init(struct chat_buffer *cbuf){$/;"	f
 chat_buffer	client.h	/^struct chat_buffer{$/;"	s
 chat_buffer	client.h	/^} chat_buffer;$/;"	v	typeref:struct:chat_buffer
+diep	client.c	/^void diep(char *msg){$/;"	f
 lock	client.h	/^	pthread_mutex_t lock;$/;"	m	struct:chat_buffer
 main	client.c	/^int main(int argc, char *argv[]){$/;"	f
 msgbuf	client.h	/^	char **msgbuf; $/;"	m	struct:chat_buffer
