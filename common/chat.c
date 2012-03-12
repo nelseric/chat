@@ -80,7 +80,7 @@ struct chat_packet * cunpack(const char *buf, size_t len){
         break;
         case OP_ERROR:
         {
-            p->body.error.errorcode = ntohs(*(uint16_t) buf + 2 + uname_len);
+            p->body.error.errorcode = ntohs(*(uint16_t*)( buf + 2 + uname_len));
 
             size_t msg_len = strlen(buf + 4 + uname_len) + 1;
             p->body.error.message = calloc(msg_len, 0);
