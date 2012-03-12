@@ -34,10 +34,13 @@ int main(int argc, char *argv[]){
     char *host = argv[2];
     char *username = argv[1];
     char * port = CHAT_PORT_S;
+
+    puts(username);
+
     if(argc == 4){
         port = argv[3];
     }
-    
+
     struct addrinfo hints;
     struct addrinfo *servinfo;  // will point to the results
     
@@ -47,9 +50,15 @@ int main(int argc, char *argv[]){
 
     // get ready to connect
     if(getaddrinfo(host, port, &hints, &servinfo))
-        diep("addr";
+        diep("addr");
 
     struct sockaddr_in *server_addr = (struct sockaddr_in *) servinfo->ai_addr;
+
+    int srv_socket;
+    if((srv_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)))
+        diep("socket");
+    if(connect(srv_socket, (struct sockaddr *) server_addr, sizeof(struct sockaddr_in)))
+        diep("connect");
 
     //set up connection
     //get motd
