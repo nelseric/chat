@@ -56,10 +56,15 @@ void cs_init(client_store_t * cstore){
 
 int add_client(client_store_t * cs, int sock, const char *userid){
     
+    if(cs->size == cs->num_hosts){
+        cs->size = (cs->size * 3 / 2) + 5;
+        cs->clients = realloc(cs->clients, size);
+    }
+    
 }
 
 chat_user_t * get_user_by_id(client_store_t *cs, const char *userid){
-
+    return NULL;
 }
 
 void cs_iterate(void (*action)(chat_user_t *)){
@@ -67,7 +72,7 @@ void cs_iterate(void (*action)(chat_user_t *)){
 }
 
 void delete_client(client_store_t *cs, int sock){
-
+    
 }
 
 void cs_free(client_store_t *cs){
@@ -78,13 +83,3 @@ void cs_free(client_store_t *cs){
     free(cs);
 }
 
-typedef struct {
-    int socket;
-    char *userid;
-} chat_user_t;
-
-typedef struct {
-    int num_clients;
-    int size;
-    chat_user_t * clients;
-} client_store_t;
