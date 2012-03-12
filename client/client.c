@@ -55,7 +55,7 @@ int main(int argc, char *argv[]){
     struct sockaddr_in *server_addr = (struct sockaddr_in *) servinfo->ai_addr;
 
     int srv_socket;
-    if((srv_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)))
+    if((srv_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) < 0))
         diep("socket");
     if(connect(srv_socket, (struct sockaddr *) server_addr, sizeof(struct sockaddr_in)))
         diep("connect");
