@@ -75,7 +75,10 @@ int main(int argc, char **argv){
         } else {
             for(int i = 0; i < cs.num_clients; i++){
                 if(FD_ISSET(cs.clients[i].socket, &fds)){
-                    
+                    char buf[500];
+                    size_t rxd = recv(cs.clients[i].socket, buf, 500, 0);
+                    struct chat_packet *p = cunpack(buf, rxd);
+
                 }
             }
         }

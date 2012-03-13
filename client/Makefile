@@ -1,7 +1,7 @@
 CC=gcc
 DBGFLAG=-ggdb 
 CFLAGS=-std=c99 $(DBGFLAG) -Wall
-LDLIBS=-lreadline #-lpthread -lncurses
+LDLIBS=-lreadline -lncurses -lpthread 
 LDFLAGS=$(DBGFLAG) 
 
 SOURCES=client.c ../common/chat.c

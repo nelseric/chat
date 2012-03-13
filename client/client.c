@@ -1,10 +1,10 @@
 #define _XOPEN_SOURCE 500
 
 #include <stdlib.h>
-//#include <curses.h>
+#include <curses.h>
 #include <string.h>
 
-//#include <pthread.h>
+#include <pthread.h>
 
 #include <errno.h>
 #include <arpa/inet.h>
@@ -18,6 +18,7 @@
 
 #include "../common/chat.h"
 #include "client.h"
+
 
 void diep(char *msg){
     perror(msg);
@@ -121,12 +122,17 @@ int main(int argc, char *argv[]){
         if(FD_ISSET(0, &fds)){
             char buf[100];
             fgets(buf, 100, stdin);
-            printf("--- %s", buf);
+            char * cmd = readline(":");
+            parse_command(srv_socket, username, cmd);
         }
     }
     freeaddrinfo(servinfo);
 }
 
+
+/***
+ * This chat buffer stuff was from my initial design of using ncurses in two threads, but that was a pain.
+ */
 void cbuf_init(struct chat_buffer *cbuf){
     cbuf->bsize = CBUF_SIZE_DEFAULT;
     cbuf->msgbuf = malloc(sizeof(char *) * cbuf->bsize);
@@ -149,33 +155,26 @@ void cbuf_add(struct chat_buffer *cbuf, const char *msg){
     pthread_mutex_unlock(&cbuf->lock);
 }
 
-void parseCommand(String pmText ){
-    char *s;
-    char user[30];
-    char message[300];
-    int count = 0;
-    int isCommand = 0;
-    s = pmText;
-    while(*(s+1) != '\0'){
-        if(s == '/'){
-            //PM
-            isCommand = 1;
-            if((s + 1 == 'P') || (s + 1 =='p')){
-                s = s + 1;
-                while((s != ' ')||(*(s+1) != '\0') ){
-                    user[count] = s;
-                    count++;	
-                }
-            }
-        }
+void parse_command(int sock, const char * username, char * input ){
+    if(input[0] == '/' && input[1] == 'p'){
+        char *msg;
+        char *rcp = strtok_r(input, " ", &msg);
+
+        struct chat_packet p;
+        p.opcode = OP_PMSG;
+        p.username = username;
+        p.body.pm.recipient = rcp;
+        p.body.pm.message = msg;
+        size_t len;
+        char * data = cpack(&p, &len);
+        write(sock, data, len);
+    } else {
+        struct chat_packet p;
+        p.opcode = OP_CMSG;
+        p.username = username;
+        p.body.cm.message = input;
+        size_t len;
+        char * data = cpack(&p, &len);
+        write(sock, data, len);
     }
-    if(isCommand){
-        s = pmText;
-        s = s + count + 3;
-        count = 0;
-        while(*s !='\0'){
-            message[count] = s;
-            count++;
-        }
-    }        
 }
