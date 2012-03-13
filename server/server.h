@@ -14,6 +14,8 @@ typedef struct {
 
 void cs_init(client_store_t * cstore);
 
+void send_all(client_store_t *cs, const struct chat_packet *packet);
+
 void clear_fds(client_store_t *cs, fd_set *fds);
 
 int add_client(client_store_t * cs, int sock, const char *username);
