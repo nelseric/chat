@@ -44,6 +44,7 @@ int main(int argc, char **argv){
     int nfds = listen_sock;
 
     while(1){
+        FD_ZERO(&fds);
         clear_fds(&cs, &fds);
         FD_SET(listen_sock, &fds);
 
@@ -83,6 +84,10 @@ int main(int argc, char **argv){
                     puts("Rx");
                     char buf[500];
                     size_t rxd = recv(cs.clients[i].socket, buf, 500, 0);
+                    if(rxd == 0 || rxd == -1){
+                        delete_client(&cs, rxd);
+                        continue;
+                    }
                     struct chat_packet *p = cunpack(buf, rxd);
                     if(p->opcode == OP_CMSG){
                         send_all(&cs, p);
@@ -137,7 +142,6 @@ void send_all(client_store_t *cs, const struct chat_packet *packet){
 }
 
 void clear_fds(client_store_t *cs, fd_set *fds){
-    FD_ZERO(fds);
     for(int i = 0; i < cs->num_clients; i++){
         int sock = cs->clients[i].socket;
         FD_SET(sock, fds);
@@ -181,8 +185,12 @@ void delete_client(client_store_t *cs, int sock){
             break;
         }
     }
-    cs->num_clients--;
-    memmove(cs->clients + id, cs->clients + id + 1, (cs-> num_clients - id) * sizeof(chat_user_t));
+    if(id == cs->num_clients){
+        cs->num_clients--;
+    } else if(cs->num_clients > 1){
+        cs->num_clients--;
+        memmove(cs->clients + id, cs->clients + id + 1, (cs-> num_clients - id) * sizeof(chat_user_t));
+    }
 }
 
 void cs_free(client_store_t *cs){

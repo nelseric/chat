@@ -123,7 +123,6 @@ int main(int argc, char *argv[]){
             char buf[100];
             fgets(buf, 100, stdin);
             parse_command(srv_socket, username, buf);
-            free(cmd);
         }
     }
     freeaddrinfo(servinfo);
@@ -157,9 +156,11 @@ void cbuf_add(struct chat_buffer *cbuf, const char *msg){
 
 void parse_command(int sock, char * username, char * input ){
     if(input[0] == '/' && input[1] == 'p'){
-        char *msg;
-        char *rcp = strtok_r(input, " ", &msg);
-
+        strtok(input, " ");
+        char *rcp = strtok(NULL, " ");
+        char *msg = strtok(NULL, "");
+        puts("Sending PM");
+        puts(msg);
         struct chat_packet p;
         p.opcode = OP_PMSG;
         p.username = username;
