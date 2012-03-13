@@ -1,10 +1,10 @@
 #define _XOPEN_SOURCE 500
 
 #include <stdlib.h>
-#include <curses.h>
+//#include <curses.h>
 #include <string.h>
 
-#include <pthread.h>
+//#include <pthread.h>
 
 #include <errno.h>
 #include <arpa/inet.h>
@@ -14,6 +14,7 @@
 #include <sys/select.h>
 #include <unistd.h>
 #include <netdb.h>
+#include <readline/readline.h>
 
 #include "../common/chat.h"
 #include "client.h"
@@ -68,42 +69,61 @@ int main(int argc, char *argv[]){
 
     struct chat_buffer cbuf;
     cbuf_init(&cbuf);
-    for(;;){
-        char buff[500];
-        struct chat_packet * pktReceived;
-        size_t received  =  recv(srv_socket, buff,500, 0);
-        if(received == 0){
-            puts("Connection terminated by server.");
-            exit(EXIT_SUCCESS);
-        } else if(received == -1){
-            diep("");
+    fd_set fds;
+    int nfds = srv_socket + 1;
+
+    while(1) {
+        FD_ZERO(&fds);
+        FD_SET(0, &fds);
+        FD_SET(srv_socket, &fds);
+        struct timeval tv;
+        tv.tv_sec = 0;
+        tv.tv_usec = 0; 
+
+        int sr = select(nfds, &fds, NULL, NULL, &tv);
+        if(sr == -1)
+            diep("select");
+        if(FD_ISSET(srv_socket, &fds)){
+            char buff[500];
+            struct chat_packet * pktReceived;
+            size_t received  =  recv(srv_socket, buff,500, 0);
+            if(received == 0){
+                puts("Connection terminated by server.");
+                exit(EXIT_SUCCESS);
+            } else if(received == -1){
+                diep("");
+            }
+            pktReceived = cunpack(buff, received);
+            switch(pktReceived->opcode){
+                case OP_CMSG:
+                    {
+                        printf("%s: %s\n", 
+                                pktReceived->username, 
+                                pktReceived->body.cm.message );
+                        break;
+                    }
+                case OP_PMSG:
+                    {
+                        printf("!FROM %s: %s\n", 
+                                pktReceived->username, 
+                                pktReceived->body.pm.message );
+                        break;
+                    }
+                case OP_ERROR:
+                    {
+                        printf("Error: %s: %s", 
+                                pktReceived->username, 
+                                pktReceived->body.error.message);
+                        break;
+                    }
+            }
         }
-        pktReceived = cunpack(buff, received);
-        switch(pktReceived->opcode){
-            case OP_CMSG:
-                {
-                    printf("%s: %s\n", pktReceived->username, pktReceived->body.cm.message );
-                    break;
-                }
-            case OP_PMSG:
-                {
-                    printf("PM: %s: %s\n", pktReceived->username, pktReceived->body.pm.message );
-                    break;
-                }
-            case OP_ERROR:
-                {
-                    printf("Error: %s: %s", pktReceived->username, pktReceived->body.error.message);
-                    break;
-                }
+        if(FD_ISSET(0, &fds)){
+            char buf[100];
+            fgets(buf, 100, stdin);
+            printf("--- %s", buf);
         }
     }
-
-    initscr();
-    printw("%s: Hello", username);
-    char cmdbuf[COLS+1];
-    mvgetnstr(LINES-1,0, cmdbuf, COLS);
-
-    endwin();
 
     freeaddrinfo(servinfo);
 }

@@ -72,6 +72,12 @@ int main(int argc, char **argv){
             sprintf(p.body.cm.message, "%s has connected", rc->username);
             send_all(&cs, &p);
             free(rc);
+        } else {
+            for(int i = 0; i < cs.num_clients; i++){
+                if(FD_ISSET(cs.clients[i].socket, &fds)){
+                    
+                }
+            }
         }
     }
 }
