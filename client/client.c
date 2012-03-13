@@ -124,7 +124,6 @@ int main(int argc, char *argv[]){
             printf("--- %s", buf);
         }
     }
-
     freeaddrinfo(servinfo);
 }
 
@@ -150,4 +149,33 @@ void cbuf_add(struct chat_buffer *cbuf, const char *msg){
     pthread_mutex_unlock(&cbuf->lock);
 }
 
-
+void parseCommand(String pmText ){
+    char *s;
+    char user[30];
+    char message[300];
+    int count = 0;
+    int isCommand = 0;
+    s = pmText;
+    while(*(s+1) != '\0'){
+        if(s == '/'){
+            //PM
+            isCommand = 1;
+            if((s + 1 == 'P') || (s + 1 =='p')){
+                s = s + 1;
+                while((s != ' ')||(*(s+1) != '\0') ){
+                    user[count] = s;
+                    count++;	
+                }
+            }
+        }
+    }
+    if(isCommand){
+        s = pmText;
+        s = s + count + 3;
+        count = 0;
+        while(*s !='\0'){
+            message[count] = s;
+            count++;
+        }
+    }        
+}
