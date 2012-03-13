@@ -16,7 +16,7 @@ void cbuf_init(struct chat_buffer *cbuf);
 void cbuf_destroy(struct chat_buffer *cbuf);
 void cbuf_add(struct chat_buffer *cbuf, const char *msg);
 
-void parse_command(char * input );
+void parse_command(int socket, char * username, char * input );
 
 
 

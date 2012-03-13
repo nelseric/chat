@@ -31,6 +31,9 @@ int main(int argc, char **argv){
 
     if((listen_sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
         diep("listen socket");
+    int v = 1;
+    if(setsockopt(listen_sock, SOL_SOCKET, SO_REUSEADDR, &v, sizeof(int)) == -1)
+        diep("sockopt");
     if(bind(listen_sock, (struct sockaddr*) &listen_addr, sizeof(listen_addr)) == -1)
         diep("listen bind");
     if(listen(listen_sock, 1024) == -1)
@@ -55,6 +58,8 @@ int main(int argc, char **argv){
             int cfd = accept(listen_sock, (struct sockaddr *)&caddr, &caddr_size);
             if(cfd == -1)
                 diep("accept");
+
+            nfds = nfds < cfd ? cfd : nfds;
             char buf[500];
             size_t rxd = recv(cfd, buf, 500, 0);
             if(rxd == -1){
@@ -75,10 +80,21 @@ int main(int argc, char **argv){
         } else {
             for(int i = 0; i < cs.num_clients; i++){
                 if(FD_ISSET(cs.clients[i].socket, &fds)){
+                    puts("Rx");
                     char buf[500];
                     size_t rxd = recv(cs.clients[i].socket, buf, 500, 0);
                     struct chat_packet *p = cunpack(buf, rxd);
-
+                    if(p->opcode == OP_CMSG){
+                        send_all(&cs, p);
+                    } else if (p->opcode == OP_PMSG){
+                        chat_user_t *rcp = get_user_by_name(&cs, p->body.pm.recipient);
+                        if(rcp != NULL){
+                            int wr = write(rcp->socket, buf, rxd);
+                            if(wr >= 0){
+                                delete_client(&cs, rcp->socket);
+                            }
+                        }
+                    }
                 }
             }
         }

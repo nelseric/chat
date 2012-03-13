@@ -122,8 +122,8 @@ int main(int argc, char *argv[]){
         if(FD_ISSET(0, &fds)){
             char buf[100];
             fgets(buf, 100, stdin);
-            char * cmd = readline(":");
-            parse_command(srv_socket, username, cmd);
+            parse_command(srv_socket, username, buf);
+            free(cmd);
         }
     }
     freeaddrinfo(servinfo);
@@ -155,7 +155,7 @@ void cbuf_add(struct chat_buffer *cbuf, const char *msg){
     pthread_mutex_unlock(&cbuf->lock);
 }
 
-void parse_command(int sock, const char * username, char * input ){
+void parse_command(int sock, char * username, char * input ){
     if(input[0] == '/' && input[1] == 'p'){
         char *msg;
         char *rcp = strtok_r(input, " ", &msg);
