@@ -98,14 +98,14 @@ int main(int argc, char *argv[]){
             switch(pktReceived->opcode){
                 case OP_CMSG:
                     {
-                        printf("%s: %s\n", 
+                        printf("\x1b[36m%s: %s\n", 
                                 pktReceived->username, 
                                 pktReceived->body.cm.message );
                         break;
                     }
                 case OP_PMSG:
                     {
-                        printf("!FROM %s: %s\n", 
+                        printf("\x1b[32mPM %s: %s\n", 
                                 pktReceived->username, 
                                 pktReceived->body.pm.message );
                         break;
@@ -118,6 +118,7 @@ int main(int argc, char *argv[]){
                         break;
                     }
             }
+            puts("\x1b[0m");
         }
         if(FD_ISSET(0, &fds)){
             char buf[100];
